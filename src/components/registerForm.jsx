@@ -1,7 +1,9 @@
 import React from "react";
+
 import Form from "./common/form";
 import Joi from "joi-browser";
 import * as userService from "../services/userService";
+import auth from "../services/authService";
 
 class RegisterForm extends Form {
   state = {
@@ -19,11 +21,7 @@ class RegisterForm extends Form {
     //since this below returns a promise, we need to await it and use async
     try {
       const response = await userService.register(this.state.data);
-      const test = localStorage.setItem(
-        "token",
-        response.headers["x-auth-token"]
-      );
-      console.log(test);
+      auth.loginWithJwt(response.headers["x-auth-token"]);
 
       //this.props.history.push("/");
       //this will cause the whole application to reload
@@ -36,7 +34,7 @@ class RegisterForm extends Form {
       }
     }
   };
-  doSubmit;
+
   render() {
     return (
       <div>
